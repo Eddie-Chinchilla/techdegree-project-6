@@ -5,6 +5,7 @@ const btnReset = document.getElementsByClassName("btn__reset");
 const overlay = document.getElementById('overlay');
 const title = document.getElementsByClassName('title');
 const letter = document.getElementsByClassName('letter');
+const show = document.getElementsByClassName('space');
 const tries = document.getElementsByClassName('tries');
 let missed = 0;
 const boardLetters = [];
@@ -13,14 +14,17 @@ const phrases = [
     'may the force be with you',
     'ill be back',
     'houston we have a problem',
-    'just keep swimming',
-    'to infinity and beyond'
+    'just keep swimming', 
+    'et phone home',
+    'youre killin me smalls',
+    'you had me at hello',
+    'youre gonna need a bigger boat',
+    'i see dead people',
+    'nobody puts baby in a corner',
+    'im the king of the world'
 ]
 
 
-
-
-//Functions
 
 //Get random phrase from phrases array
 function getRandomPhraseAsArray(arr) {
@@ -30,10 +34,10 @@ function getRandomPhraseAsArray(arr) {
     return arr[index];
 }
 
+const ul = document.querySelector('#phrase ul');
 //Add random phrase to display
 function addPhraseToDisplay(arr) {
     for (let i = 0; i < arr.length; i++) {
-        const ul = document.querySelector('#phrase ul');
         const li = document.createElement('li');
         li.textContent = arr[i];
         if (li.textContent === ' ') {
@@ -67,24 +71,48 @@ function checkWin() {
         overlay.classList.add('win')
         title[0].textContent = 'Congrats! You Won!';
         overlay.style.display = 'flex';
+        resetGame();
     } else if (missed > 4) {
         overlay.classList.add('lose');
         title[0].textContent = 'Sorry, you lost';
         overlay.style.display = 'flex';
-        reset();
+        resetGame();
     }
 }
 
 
 //Hide overlay to start game
-const phraseArray = getRandomPhraseAsArray(phrases);
 btnReset[0].addEventListener('click', () => {
-    addPhraseToDisplay(phraseArray);
     overlay.style.display = 'none';
+    createBoard();
 });
 
 //Create board
+function createBoard() {
+    const phraseArray = getRandomPhraseAsArray(phrases);
+    addPhraseToDisplay(phraseArray);
+    ul.style.textTransform = 'capitalize';
+}
 
+//Reset Game
+function resetGame() {
+    btnReset[0].textContent = 'Play Again';
+    //rewstore lives
+    missed = 0;
+    for (let i = 0; i < tries.length; i++) {
+        tries[i].firstChild.src = 'images/liveHeart.png';
+    }
+    //reset letters
+    const button = document.getElementsByTagName('button');
+    for (let i = 0; i < button.length; i++) {
+        button[i].classList.remove('chosen');
+        button[i].disabled = false;
+    }
+    //clear board
+    ul.innerHTML = '';
+    boardLetters.length = 0;
+    showClass.length = 0;
+}
 
 //Game loop
 qwerty.addEventListener('click', (event) => {
